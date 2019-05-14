@@ -2,6 +2,7 @@
 #define WRITINGWIDGET_H
 
 #include <QWidget>
+#include <QTextEdit>
 
 class MainWindow;
 

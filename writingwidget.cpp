@@ -4,7 +4,6 @@
 #include "QWidget"
 
 WritingWidget::WritingWidget(MainWindow *parent) : QWidget(parent), m_mainWindow(parent) {
-
 }
 
 WritingWidget::~WritingWidget() {

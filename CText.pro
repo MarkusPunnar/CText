@@ -30,6 +30,4 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     writingwidget.h
 
-FORMS    += mainwindow.ui
-
 DISTFILES +=
