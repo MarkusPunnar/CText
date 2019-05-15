@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QTextEdit>
+#include <QString>
 
 class WritingWidget;
 class QMenu;
@@ -10,23 +11,30 @@ class QMenu;
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
-public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    public:
+        explicit MainWindow(QWidget *parent = 0);
+        ~MainWindow();
+        QString currentOpenFile;
 
-protected:
-    void initWidgets();
-    void initMenus();
+    public slots:
+        void saveFileToDisk();
+        void openFileFromDisk();
+        void openNewFile();
 
-    WritingWidget *m_writingWidget;
-        QTextEdit *m_editor;
+    protected:
+        void initWidgets();
+        void initMenus();
+        void changeTitleFile();
 
-    QMenu *m_fileMenu;
-        QAction *m_newAction;
-        QAction *m_openAction;
-        QAction *m_saveAction;
-        QAction *m_quitAction;
-    QMenu *m_helpMenu;
+        WritingWidget *m_writingWidget;
+            QTextEdit *m_editor;
+
+        QMenu *m_fileMenu;
+            QAction *m_newAction;
+            QAction *m_openAction;
+            QAction *m_saveAction;
+            QAction *m_quitAction;
+        QMenu *m_helpMenu;
 };
 
 #endif // MAINWINDOW_H
