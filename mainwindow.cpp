@@ -10,6 +10,7 @@
 #include "QFileDialog"
 #include "QStringList"
 
+
 #include <iostream>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -27,8 +28,14 @@ MainWindow::~MainWindow() {
 void MainWindow::initWidgets() {
     setWindowTitle(QString("CText - Untitled"));
     m_writingWidget = new WritingWidget(this);
-    m_editor = new QTextEdit(this);
-    this->setCentralWidget(m_editor);
+    QTextEdit *editor = new QTextEdit(this);
+    openFileVector.push_back(editor);
+    m_tab = new QTabWidget(this);
+    m_tab->setTabsClosable(true);
+    m_tab->insertTab(0, editor, "Untitled");
+    this->setCentralWidget(m_tab);
+    connect(m_tab, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
+    m_tab->show();
 }
 
 void MainWindow::initMenus() {
@@ -81,21 +88,22 @@ void MainWindow::saveFileToDisk() {
     } else {
         savePath = currentOpenFile;
     }
-    m_writingWidget->saveFile(savePath, m_editor->toPlainText());
+    m_writingWidget->saveFile(savePath, openFileVector.at(m_tab->currentIndex())->toPlainText());
     currentOpenFile = savePath;
-    this->changeTitleFile();
+    QString newName = this->changeTitleFile();
+    m_tab->setTabText(m_tab->currentIndex(), newName);
 }
 
 void MainWindow::saveAsFileToDisk() {
     QString savePath;
-
-        QFileDialog *dialog = new QFileDialog(this);
-        if (dialog->exec()) {
-            savePath = dialog->selectedFiles().at(0);
-        }
-    m_writingWidget->saveFile(savePath, m_editor->toPlainText());
+    QFileDialog *dialog = new QFileDialog(this);
+    if (dialog->exec()) {
+        savePath = dialog->selectedFiles().at(0);
+    }
+    m_writingWidget->saveFile(savePath, openFileVector.at(m_tab->currentIndex())->toPlainText());
     currentOpenFile = savePath;
-    this->changeTitleFile();
+    QString newName = this->changeTitleFile();
+    m_tab->setTabText(m_tab->currentIndex(), newName);
 }
 
 void MainWindow::openFileFromDisk() {
@@ -105,16 +113,32 @@ void MainWindow::openFileFromDisk() {
         filePath = dialog->selectedFiles().at(0);
     }
     QString fileContent = m_writingWidget->openFile(filePath);
-    m_editor->setPlainText(fileContent);
+    openFileVector.at(m_tab->currentIndex())->setPlainText(fileContent);
     currentOpenFile = filePath;
-    this->changeTitleFile();
+    QString newName = this->changeTitleFile();
+    m_tab->setTabText(m_tab->currentIndex(), newName);
 }
 
 void MainWindow::openNewFile() {
-    /* TODO */
+    QTextEdit *newTab = new QTextEdit(this);
+    m_tab->insertTab(openFileVector.size(), newTab, "Untitled");
+    openFileVector.push_back(newTab);
+    newTab->show();
 }
 
-void MainWindow::changeTitleFile() {
+QString MainWindow::changeTitleFile() {
     QStringList splitPath = currentOpenFile.split('/', QString::SkipEmptyParts);
     setWindowTitle("CText - " + splitPath.at(splitPath.size() - 1));
+    return splitPath.at(splitPath.size() - 1);
+}
+
+void MainWindow::closeTab(int index) {
+    if (index == -1) {
+        return;
+    }
+    openFileVector.erase(openFileVector.begin()+index);
+    m_tab->removeTab(index);
+    if (openFileVector.size() == 0) {
+        this->close();
+    }
 }

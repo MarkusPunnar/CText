@@ -4,6 +4,10 @@
 #include <QMainWindow>
 #include <QTextEdit>
 #include <QString>
+#include "QTabWidget"
+#include "QTabBar"
+
+#include "vector"
 
 class WritingWidget;
 class QMenu;
@@ -21,14 +25,17 @@ class MainWindow : public QMainWindow {
         void saveAsFileToDisk();
         void openFileFromDisk();
         void openNewFile();
+        void closeTab(int index);
 
     protected:
         void initWidgets();
         void initMenus();
-        void changeTitleFile();
+        QString changeTitleFile();
 
+        QTabWidget *m_tab;
         WritingWidget *m_writingWidget;
-            QTextEdit *m_editor;
+
+        std::vector<QTextEdit*> openFileVector;
 
         QMenu *m_fileMenu;
             QAction *m_newAction;
