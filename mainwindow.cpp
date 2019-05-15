@@ -87,7 +87,6 @@ void MainWindow::saveFileToDisk() {
 }
 
 void MainWindow::saveAsFileToDisk() {
-    QDir currentDir = QDir::currentPath();
     QString savePath;
 
         QFileDialog *dialog = new QFileDialog(this);
