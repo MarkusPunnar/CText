@@ -27,6 +27,18 @@ void WritingWidget::saveFile(QString fileName, QString savedData) {
     }
 }
 
+void WritingWidget::saveAsFile(QString fileName, QString savedData) {
+    QSaveFile *writer = new QSaveFile(fileName);
+    if (writer->open(QIODevice::WriteOnly)) {
+        QTextStream stream (writer);
+        stream << savedData;
+        writer->commit();
+    } else {
+        /* TODO Failure pop-up and handling */
+        std::cerr << "Saving failed!" << std::endl;
+    }
+}
+
 QString WritingWidget::openFile(QString fileName) {
     QFile *reader = new QFile(fileName);
     QString content;

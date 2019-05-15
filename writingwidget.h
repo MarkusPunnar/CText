@@ -13,6 +13,7 @@ class WritingWidget: public QWidget {
         WritingWidget(MainWindow *parent = 0);
         ~WritingWidget();
         void saveFile(QString fileName, QString savedData);
+        void saveAsFile(QString fileName, QString savedData);
         QString openFile(QString fileName);
 
     protected:

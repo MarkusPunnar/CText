@@ -18,6 +18,7 @@ class MainWindow : public QMainWindow {
 
     public slots:
         void saveFileToDisk();
+        void saveAsFileToDisk();
         void openFileFromDisk();
         void openNewFile();
 
@@ -33,6 +34,7 @@ class MainWindow : public QMainWindow {
             QAction *m_newAction;
             QAction *m_openAction;
             QAction *m_saveAction;
+            QAction *m_saveAsAction;
             QAction *m_quitAction;
         QMenu *m_helpMenu;
 };

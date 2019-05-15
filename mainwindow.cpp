@@ -52,6 +52,11 @@ void MainWindow::initMenus() {
     m_fileMenu->addAction(m_saveAction);
     connect(m_saveAction, &QAction::triggered, this, &MainWindow::saveFileToDisk);
 
+    m_saveAsAction = new QAction(this);
+    m_saveAsAction->setText(QString("&Save as..."));
+    m_fileMenu->addAction(m_saveAsAction);
+    connect(m_saveAsAction, &QAction::triggered, this, &MainWindow::saveAsFileToDisk);
+
     m_quitAction = new QAction(this);
     m_quitAction->setMenuRole(QAction::QuitRole);
     m_quitAction->setText(QString("&Quit"));
@@ -76,6 +81,19 @@ void MainWindow::saveFileToDisk() {
     } else {
         savePath = currentOpenFile;
     }
+    m_writingWidget->saveFile(savePath, m_editor->toPlainText());
+    currentOpenFile = savePath;
+    this->changeTitleFile();
+}
+
+void MainWindow::saveAsFileToDisk() {
+    QDir currentDir = QDir::currentPath();
+    QString savePath;
+
+        QFileDialog *dialog = new QFileDialog(this);
+        if (dialog->exec()) {
+            savePath = dialog->selectedFiles().at(0);
+        }
     m_writingWidget->saveFile(savePath, m_editor->toPlainText());
     currentOpenFile = savePath;
     this->changeTitleFile();
