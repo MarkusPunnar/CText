@@ -26,6 +26,8 @@ class MainWindow : public QMainWindow {
         void openFileFromDisk();
         void openNewFile();
         void closeTab(int index);
+        void changeFontToBold();
+        void changeFontToItalic();
 
     protected:
         void initWidgets();
@@ -44,6 +46,8 @@ class MainWindow : public QMainWindow {
             QAction *m_saveAsAction;
             QAction *m_quitAction;
         QMenu *m_helpMenu;
+        QAction *m_boldFontAction;
+        QAction *m_italicFontAction;
 };
 
 #endif // MAINWINDOW_H

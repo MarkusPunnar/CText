@@ -9,8 +9,6 @@
 #include "QDir"
 #include "QFileDialog"
 #include "QStringList"
-
-
 #include <iostream>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -60,7 +58,7 @@ void MainWindow::initMenus() {
     connect(m_saveAction, &QAction::triggered, this, &MainWindow::saveFileToDisk);
 
     m_saveAsAction = new QAction(this);
-    m_saveAsAction->setText(QString("&Save as..."));
+    m_saveAsAction->setText("Save as...");
     m_fileMenu->addAction(m_saveAsAction);
     connect(m_saveAsAction, &QAction::triggered, this, &MainWindow::saveAsFileToDisk);
 
@@ -71,10 +69,21 @@ void MainWindow::initMenus() {
     connect(m_quitAction, SIGNAL(triggered()),
             this, SLOT(close()));
 
-
     m_helpMenu = new QMenu(this);
     m_helpMenu->setTitle(QString("&Help"));
     menuBar()->addMenu(m_helpMenu);
+
+    m_boldFontAction = new QAction(this);
+    m_boldFontAction->setIcon(QIcon(QString("bold-512.png")));
+    menuBar()->addAction(m_boldFontAction);
+    connect(m_boldFontAction, &QAction::triggered,
+            this, &MainWindow::changeFontToBold);
+
+    m_italicFontAction= new QAction(this);
+    m_italicFontAction->setIcon(QIcon(QString("italic-512.png")));
+    menuBar()->addAction(m_italicFontAction);
+    connect(m_boldFontAction, &QAction::triggered,
+            this, &MainWindow::changeFontToBold);
 }
 
 void MainWindow::saveFileToDisk() {
@@ -141,4 +150,12 @@ void MainWindow::closeTab(int index) {
     if (openFileVector.size() == 0) {
         this->close();
     }
+}
+
+void MainWindow::changeFontToBold() {
+     openFileVector.at(m_tab->currentIndex())->setFontWeight(QFont::Bold);
+}
+
+void MainWindow::changeFontToItalic() {
+     openFileVector.at(m_tab->currentIndex())->setFontItalic(true);
 }
