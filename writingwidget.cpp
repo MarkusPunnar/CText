@@ -14,6 +14,7 @@ WritingWidget::WritingWidget(MainWindow *parent) : QWidget(parent), m_mainWindow
 
 WritingWidget::~WritingWidget() {
 }
+
 void WritingWidget::saveFile(QString fileName, QString savedData) {
     QSaveFile *writer = new QSaveFile(fileName);
     if (writer->open(QIODevice::WriteOnly)) {

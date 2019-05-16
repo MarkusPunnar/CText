@@ -31,3 +31,6 @@ HEADERS  += mainwindow.h \
     writingwidget.h
 
 DISTFILES +=
+
+RESOURCES += \
+    resources.qrc

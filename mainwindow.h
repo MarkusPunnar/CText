@@ -19,6 +19,7 @@ class MainWindow : public QMainWindow {
         explicit MainWindow(QWidget *parent = 0);
         ~MainWindow();
         QString currentOpenFile;
+        QString lastSavedState;
 
     public slots:
         void saveFileToDisk();
@@ -28,6 +29,8 @@ class MainWindow : public QMainWindow {
         void closeTab(int index);
         void changeFontToBold();
         void changeFontToItalic();
+        void onTextChanged();
+        void changeTab(int index);
 
     protected:
         void initWidgets();

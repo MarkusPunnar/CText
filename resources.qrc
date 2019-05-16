@@ -1,0 +1,7 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file>images/bold.png</file>
+    <file>images/italic.png</file>
+    <file>images/save.png</file>
+</qresource>
+</RCC>
