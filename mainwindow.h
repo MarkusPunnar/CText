@@ -29,6 +29,10 @@ class MainWindow : public QMainWindow {
         void closeTab(int index);
         void changeFontToBold();
         void changeFontToItalic();
+        void changeFontToRed();
+        void changeFontToBlue();
+        void changeFontToGreen();
+        void changeFontToBlack();
         void onTextChanged();
         void changeTab(int index);
 
@@ -51,6 +55,11 @@ class MainWindow : public QMainWindow {
         QMenu *m_helpMenu;
         QAction *m_boldFontAction;
         QAction *m_italicFontAction;
+        QMenu *m_colourMenu;
+            QAction *m_redFontAction;
+            QAction *m_blueFontAction;
+            QAction *m_greenFontAction;
+            QAction *m_blackFontAction;
 };
 
 #endif // MAINWINDOW_H

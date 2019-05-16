@@ -63,7 +63,7 @@ void MainWindow::initMenus() {
     connect(m_saveAction, &QAction::triggered, this, &MainWindow::saveFileToDisk);
 
     m_saveAsAction = new QAction(this);
-    m_saveAsAction->setText("Save as...");
+    m_saveAsAction->setText("&Save as...");
     m_fileMenu->addAction(m_saveAsAction);
     connect(m_saveAsAction, &QAction::triggered, this, &MainWindow::saveAsFileToDisk);
 
@@ -77,6 +77,7 @@ void MainWindow::initMenus() {
     m_helpMenu = new QMenu(this);
     m_helpMenu->setTitle(QString("&Help"));
     menuBar()->addMenu(m_helpMenu);
+
     m_boldFontAction = new QAction(this);
     m_boldFontAction->setIcon(QIcon(":/images/bold.png"));
     menuBar()->addAction(m_boldFontAction);
@@ -88,6 +89,36 @@ void MainWindow::initMenus() {
     menuBar()->addAction(m_italicFontAction);
     connect(m_italicFontAction, &QAction::triggered,
             this, &MainWindow::changeFontToItalic);
+
+    m_colourMenu = new QMenu(this);
+    m_colourMenu->setTitle(QString("&Text colour"));
+    menuBar()->addMenu(m_colourMenu);
+
+    m_redFontAction = new QAction(this);
+    m_redFontAction->setText(QString("&Red"));
+    m_redFontAction->setIcon(QIcon(":/images/red.png"));
+    m_colourMenu->addAction(m_redFontAction);
+    connect(m_redFontAction, &QAction::triggered, this, &MainWindow::changeFontToRed);
+
+    m_blueFontAction = new QAction(this);
+    m_blueFontAction->setText(QString("&Blue"));
+    m_blueFontAction->setIcon(QIcon(":/images/blue.png"));
+    m_colourMenu->addAction(m_blueFontAction);
+    connect(m_blueFontAction, &QAction::triggered, this, &MainWindow::changeFontToBlue);
+
+    m_greenFontAction = new QAction(this);
+    m_greenFontAction->setText(QString("&Green"));
+    m_greenFontAction->setIcon(QIcon(":/images/green.png"));
+    m_colourMenu->addAction(m_greenFontAction);
+    connect(m_greenFontAction, &QAction::triggered, this, &MainWindow::changeFontToGreen);
+
+    m_blackFontAction = new QAction(this);
+    m_blackFontAction->setText("&Black");
+    m_blackFontAction->setIcon(QIcon(":/images/black.jpeg"));
+    m_colourMenu->addAction(m_blackFontAction);
+    connect(m_blackFontAction, &QAction::triggered, this, &MainWindow::changeFontToBlack);
+
+
 }
 
 void MainWindow::saveFileToDisk() {
@@ -197,6 +228,22 @@ void MainWindow::changeFontToItalic() {
     } else {
         openFileVector.at(m_tab->currentIndex())->setFontItalic(true);
     }
+}
+
+void MainWindow::changeFontToRed() {
+        openFileVector.at(m_tab->currentIndex())->setTextColor(QColor(255,0,0));
+}
+
+void MainWindow::changeFontToBlue() {
+        openFileVector.at(m_tab->currentIndex())->setTextColor(QColor(0,0,255));
+}
+
+void MainWindow::changeFontToGreen() {
+        openFileVector.at(m_tab->currentIndex())->setTextColor(QColor(0,255,0));
+}
+
+void MainWindow::changeFontToBlack() {
+        openFileVector.at(m_tab->currentIndex())->setTextColor(QColor(0,0,0));
 }
 
 void MainWindow::onTextChanged() {
