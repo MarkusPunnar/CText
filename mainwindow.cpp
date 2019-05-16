@@ -82,8 +82,8 @@ void MainWindow::initMenus() {
     m_italicFontAction= new QAction(this);
     m_italicFontAction->setIcon(QIcon(QString("italic-512.png")));
     menuBar()->addAction(m_italicFontAction);
-    connect(m_boldFontAction, &QAction::triggered,
-            this, &MainWindow::changeFontToBold);
+    connect(m_italicFontAction, &QAction::triggered,
+            this, &MainWindow::changeFontToItalic);
 }
 
 void MainWindow::saveFileToDisk() {
@@ -153,9 +153,18 @@ void MainWindow::closeTab(int index) {
 }
 
 void MainWindow::changeFontToBold() {
+    if (openFileVector.at(m_tab->currentIndex())->fontWeight() > 50){
+        openFileVector.at(m_tab->currentIndex())->setFontWeight(QFont::Normal);
+    }else{
      openFileVector.at(m_tab->currentIndex())->setFontWeight(QFont::Bold);
+    }
 }
 
+
 void MainWindow::changeFontToItalic() {
-     openFileVector.at(m_tab->currentIndex())->setFontItalic(true);
+            if (openFileVector.at(m_tab->currentIndex())->fontItalic()){
+                openFileVector.at(m_tab->currentIndex())->setFontItalic(false);
+            }else{
+             openFileVector.at(m_tab->currentIndex())->setFontItalic(true);
+            }
 }
