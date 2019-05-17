@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent) {
 
     QDir currentDir = QDir::currentPath();
-    currentOpenFile = currentDir.absolutePath() + "/Untitled";
+    currentOpenFiles.push_back(currentDir.absolutePath() + "/Untitled");
     initWidgets();
     initMenus();
 }
@@ -33,6 +33,7 @@ void MainWindow::initWidgets() {
     QTextEdit *editor = new QTextEdit(this);
     connect(editor, SIGNAL(textChanged()), this, SLOT(onTextChanged()));
     openFileVector.push_back(editor);
+    lastSavedStates.push_back("");
     m_tab = new QTabWidget(this);
     m_tab->setTabsClosable(true);
     m_tab->insertTab(0, editor, "Untitled");
@@ -128,8 +129,8 @@ void MainWindow::initMenus() {
 
 void MainWindow::saveFileToDisk() {
     QDir currentDir = QDir::currentPath();
-    QString savePath;
-    if (currentOpenFile == currentDir.absolutePath() + "/Untitled") {
+    QString savePath = currentOpenFiles.at(m_tab->currentIndex());
+    if (currentOpenFiles.at(m_tab->currentIndex()) == currentDir.absolutePath() + "/Untitled") {
         QFileDialog *dialog = new QFileDialog(this);
         if (dialog->exec()) {
             QStringList fileList = dialog->selectedFiles();
@@ -137,13 +138,13 @@ void MainWindow::saveFileToDisk() {
                 return;
             }
             savePath = fileList.at(0);
+            currentOpenFiles.erase(currentOpenFiles.begin() + m_tab->currentIndex());
+            currentOpenFiles.push_back(savePath);
         }
-    } else {
-        savePath = currentOpenFile;
     }
     m_writingWidget->saveFile(savePath, openFileVector.at(m_tab->currentIndex())->toPlainText());
-    currentOpenFile = savePath;
-    lastSavedState = openFileVector.at(m_tab->currentIndex())->toPlainText();
+    lastSavedStates.erase(lastSavedStates.begin() + m_tab->currentIndex());
+    lastSavedStates.push_back(openFileVector.at(m_tab->currentIndex())->toPlainText());
     m_tab->setTabIcon(m_tab->currentIndex(), QIcon());
     QString newName = this->changeTitleFile();
     m_tab->setTabText(m_tab->currentIndex(), newName);
@@ -160,8 +161,9 @@ void MainWindow::saveAsFileToDisk() {
         savePath = fileList.at(0);
     }
     m_writingWidget->saveFile(savePath, openFileVector.at(m_tab->currentIndex())->toPlainText());
-    currentOpenFile = savePath;
-    lastSavedState = openFileVector.at(m_tab->currentIndex())->toPlainText();
+    currentOpenFiles.erase(currentOpenFiles.begin() + m_tab->currentIndex());
+    currentOpenFiles.push_back(savePath);
+    lastSavedStates.push_back(openFileVector.at(m_tab->currentIndex())->toPlainText());
     m_tab->setTabIcon(m_tab->currentIndex(), QIcon());
     QString newName = this->changeTitleFile();
     m_tab->setTabText(m_tab->currentIndex(), newName);
@@ -175,7 +177,11 @@ void MainWindow::openFileFromDisk() {
     }
     QString fileContent = m_writingWidget->openFile(filePath);
     openFileVector.at(m_tab->currentIndex())->setPlainText(fileContent);
-    currentOpenFile = filePath;
+    lastSavedStates.erase(lastSavedStates.begin() + m_tab->currentIndex());
+    lastSavedStates.push_back(fileContent);
+    emit onTextChanged();
+    currentOpenFiles.erase(currentOpenFiles.begin() + m_tab->currentIndex());
+    currentOpenFiles.push_back(filePath);
     QString newName = this->changeTitleFile();
     m_tab->setTabText(m_tab->currentIndex(), newName);
 }
@@ -183,14 +189,17 @@ void MainWindow::openFileFromDisk() {
 void MainWindow::openNewFile() {
     QTextEdit *newTab = new QTextEdit(this);
     m_tab->insertTab(openFileVector.size(), newTab, "Untitled");
+    connect(newTab, SIGNAL(textChanged()), this, SLOT(onTextChanged()));
+    currentOpenFiles.push_back(QDir::currentPath() + "/Untitled");
     openFileVector.push_back(newTab);
+    lastSavedStates.push_back("");
     m_tab->setCurrentIndex(openFileVector.size() - 1);
     this->changeTab(m_tab->currentIndex());
     newTab->show();
 }
 
 QString MainWindow::changeTitleFile() {
-    QStringList splitPath = currentOpenFile.split('/', QString::SkipEmptyParts);
+    QStringList splitPath = currentOpenFiles.at(m_tab->currentIndex()).split('/', QString::SkipEmptyParts);
     setWindowTitle("CText - " + splitPath.at(splitPath.size() - 1));
     return splitPath.at(splitPath.size() - 1);
 }
@@ -199,13 +208,15 @@ void MainWindow::closeTab(int index) {
     if (index == -1) {
         return;
     }
-    if (lastSavedState != openFileVector.at(m_tab->currentIndex())->toPlainText()) {
+    if (lastSavedStates.at(index) != openFileVector.at(index)->toPlainText()) {
         QMessageBox::StandardButton confirm;
         confirm = QMessageBox::question(this, "Confirmation",
                                         "You have unsaved changes. Are you sure you want to close this tab?",
                                         QMessageBox::Yes | QMessageBox::No);
         if (confirm == QMessageBox::Yes) {
             openFileVector.erase(openFileVector.begin()+index);
+            lastSavedStates.erase(lastSavedStates.begin()+index);
+            currentOpenFiles.erase(currentOpenFiles.begin()+index);
             m_tab->removeTab(index);
             if (openFileVector.size() == 0) {
                 this->close();
@@ -213,6 +224,8 @@ void MainWindow::closeTab(int index) {
         }
     } else {
         openFileVector.erase(openFileVector.begin()+index);
+        lastSavedStates.erase(lastSavedStates.begin()+index);
+        currentOpenFiles.erase(currentOpenFiles.begin()+index);
         m_tab->removeTab(index);
         if (openFileVector.size() == 0) {
             this->close();
@@ -255,16 +268,15 @@ void MainWindow::changeFontToBlack() {
 
 void MainWindow::onTextChanged() {
     QString newText = openFileVector.at(m_tab->currentIndex())->toPlainText();
-    if ((newText != lastSavedState) & (m_tab->tabIcon(m_tab->currentIndex()).isNull())) {
+    if ((newText != lastSavedStates.at(m_tab->currentIndex())) & (m_tab->tabIcon(m_tab->currentIndex()).isNull())) {
         m_tab->setTabIcon(m_tab->currentIndex(), QIcon(":/images/save.png"));
     }
-    if ((newText == lastSavedState) & (!m_tab->tabIcon(m_tab->currentIndex()).isNull())) {
+    if ((newText == lastSavedStates.at(m_tab->currentIndex())) & (!m_tab->tabIcon(m_tab->currentIndex()).isNull())) {
         m_tab->setTabIcon(m_tab->currentIndex(), QIcon());
     }
 }
 
 void MainWindow::changeTab(int index) {
-    lastSavedState = openFileVector.at(index)->toPlainText();
     QString tabText = m_tab->tabText(index);
     if (tabText.at(0) == '&') {
         this->setWindowTitle(QString("CText - ").append(QStringRef(&tabText, 1, tabText.length() - 1)));

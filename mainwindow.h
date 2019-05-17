@@ -18,8 +18,8 @@ class MainWindow : public QMainWindow {
     public:
         explicit MainWindow(QWidget *parent = 0);
         ~MainWindow();
-        QString currentOpenFile;
-        QString lastSavedState;
+        std::vector<QString> currentOpenFiles;
+        std::vector<QString> lastSavedStates;
 
     public slots:
         void saveFileToDisk();
