@@ -13,6 +13,7 @@
 #include "QMessageBox"
 
 #include <iostream>
+#include <string>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent) {
@@ -95,7 +96,7 @@ void MainWindow::initMenus() {
             this, &MainWindow::changeFontToItalic);
 
     m_colourMenu = new QMenu(this);
-    m_colourMenu->setTitle(QString("&Text colour"));
+    m_colourMenu->setTitle(QString("&Colour"));
     menuBar()->addMenu(m_colourMenu);
 
     m_redFontAction = new QAction(this);
@@ -183,6 +184,8 @@ void MainWindow::openNewFile() {
     QTextEdit *newTab = new QTextEdit(this);
     m_tab->insertTab(openFileVector.size(), newTab, "Untitled");
     openFileVector.push_back(newTab);
+    m_tab->setCurrentIndex(openFileVector.size() - 1);
+    this->changeTab(m_tab->currentIndex());
     newTab->show();
 }
 
@@ -262,4 +265,10 @@ void MainWindow::onTextChanged() {
 
 void MainWindow::changeTab(int index) {
     lastSavedState = openFileVector.at(index)->toPlainText();
+    QString tabText = m_tab->tabText(index);
+    if (tabText.at(0) == '&') {
+        this->setWindowTitle(QString("CText - ").append(QStringRef(&tabText, 1, tabText.length() - 1)));
+    } else {
+        this->setWindowTitle("CText - " + tabText);
+    }
 }
