@@ -49,6 +49,7 @@ void MainWindow::initMenus() {
 
     m_newAction = new QAction(this);
     m_newAction->setText(QString("&New"));
+    m_newAction->setShortcut(QKeySequence(tr("Ctrl+n")));
     m_fileMenu->addAction(m_newAction);
     connect(m_newAction, &QAction::triggered, this, &MainWindow::openNewFile);
 
@@ -59,6 +60,7 @@ void MainWindow::initMenus() {
 
     m_saveAction = new QAction(this);
     m_saveAction->setText(QString("&Save"));
+    m_saveAction->setShortcut(QKeySequence(tr("Ctrl+s")));
     m_fileMenu->addAction(m_saveAction);
     connect(m_saveAction, &QAction::triggered, this, &MainWindow::saveFileToDisk);
 
@@ -80,12 +82,14 @@ void MainWindow::initMenus() {
 
     m_boldFontAction = new QAction(this);
     m_boldFontAction->setIcon(QIcon(":/images/bold.png"));
+    m_boldFontAction->setShortcut(QKeySequence(tr("Ctrl+b")));
     menuBar()->addAction(m_boldFontAction);
     connect(m_boldFontAction, &QAction::triggered,
             this, &MainWindow::changeFontToBold);
 
     m_italicFontAction= new QAction(this);
     m_italicFontAction->setIcon(QIcon(":/images/italic.png"));
+    m_italicFontAction->setShortcut(QKeySequence(tr("Ctrl+i")));
     menuBar()->addAction(m_italicFontAction);
     connect(m_italicFontAction, &QAction::triggered,
             this, &MainWindow::changeFontToItalic);
