@@ -25,10 +25,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    writingwidget.cpp
+    writingwidget.cpp \
+    tab.cpp
 
 HEADERS  += mainwindow.h \
-    writingwidget.h
+    writingwidget.h \
+    tab.h
 
 DISTFILES +=
 

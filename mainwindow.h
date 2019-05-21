@@ -6,20 +6,20 @@
 #include <QString>
 #include "QTabWidget"
 #include "QTabBar"
+#include "tab.h"
+#include "mainwindow.h"
 
 #include "vector"
 
 class WritingWidget;
 class QMenu;
-
+class Tab;
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
     public:
         explicit MainWindow(QWidget *parent = 0);
         ~MainWindow();
-        std::vector<QString> currentOpenFiles;
-        std::vector<QString> lastSavedStates;
 
     public slots:
         void saveFileToDisk();
@@ -44,7 +44,7 @@ class MainWindow : public QMainWindow {
         QTabWidget *m_tab;
         WritingWidget *m_writingWidget;
 
-        std::vector<QTextEdit*> openFileVector;
+        std::vector<Tab*> openTabs;
 
         QMenu *m_fileMenu;
             QAction *m_newAction;
