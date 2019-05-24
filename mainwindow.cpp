@@ -12,7 +12,7 @@
 #include "QStringList"
 #include "QActionEvent"
 #include "QMessageBox"
-
+#include "QResource"
 #include <iostream>
 #include <string>
 
@@ -140,7 +140,9 @@ void MainWindow::saveFileToDisk() {
             currentTab->openFile = savePath;
         }
     }
-    m_writingWidget->saveFile(savePath, currentTab->toPlainText());
+    QString fileContent = currentTab->toPlainText();
+    m_writingWidget->saveFile(savePath, fileContent);
+    currentTab->savedState = fileContent;
     m_tab->setTabIcon(m_tab->currentIndex(), QIcon());
     QString newName = this->changeTitleFile();
     m_tab->setTabText(m_tab->currentIndex(), newName);
@@ -157,8 +159,10 @@ void MainWindow::saveAsFileToDisk() {
         }
         savePath = fileList.at(0);
     }
-    m_writingWidget->saveFile(savePath, currentTab->toPlainText());
+    QString fileContent = currentTab->toPlainText();
+    m_writingWidget->saveFile(savePath, fileContent);
     currentTab->openFile = savePath;
+    currentTab->savedState = fileContent;
     m_tab->setTabIcon(m_tab->currentIndex(), QIcon());
     QString newName = this->changeTitleFile();
     m_tab->setTabText(m_tab->currentIndex(), newName);
@@ -181,14 +185,13 @@ void MainWindow::openFileFromDisk() {
 }
 
 void MainWindow::openNewFile() {
-    QTextEdit *newEditor = new QTextEdit(this);
-    m_tab->insertTab(openTabs.size(), newEditor, "Untitled");
-    connect(newEditor, SIGNAL(textChanged()), this, SLOT(onTextChanged()));
     Tab* newTab = new Tab(QDir::currentPath() + "/Untitled", this);
+    connect(newTab, SIGNAL(textChanged()), this, SLOT(onTextChanged()));
+    m_tab->insertTab(openTabs.size(), newTab, "Untitled");
     openTabs.push_back(newTab);
     m_tab->setCurrentIndex(openTabs.size() - 1);
     this->changeTab(m_tab->currentIndex());
-    newEditor->show();
+    newTab->show();
 }
 
 QString MainWindow::changeTitleFile() {
@@ -254,7 +257,8 @@ void MainWindow::changeFontToBlack() {
 }
 
 void MainWindow::onTextChanged() {
-    QString newText = openTabs.at(m_tab->currentIndex())->toPlainText();
+    Tab *currentTab = openTabs.at(m_tab->currentIndex());
+    QString newText = currentTab->toPlainText();
     if ((newText != openTabs.at(m_tab->currentIndex())->savedState) & (m_tab->tabIcon(m_tab->currentIndex()).isNull())) {
         m_tab->setTabIcon(m_tab->currentIndex(), QIcon(":/images/save.png"));
     }
