@@ -29,6 +29,7 @@ class MainWindow : public QMainWindow {
         void closeTab(int index);
         void changeFontToBold();
         void changeFontToItalic();
+        void changeFontToUnderline();
         void changeFontToRed();
         void changeFontToBlue();
         void changeFontToGreen();
@@ -57,6 +58,7 @@ class MainWindow : public QMainWindow {
         QMenu *m_stylingMenu;
             QAction *m_boldFontAction;
             QAction *m_italicFontAction;
+            QAction *m_underlineFontAction;
         QMenu *m_colourMenu;
             QAction *m_redFontAction;
             QAction *m_blueFontAction;
