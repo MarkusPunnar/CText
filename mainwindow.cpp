@@ -13,6 +13,7 @@
 #include "QActionEvent"
 #include "QMessageBox"
 #include "QResource"
+#include <QFontDatabase>
 #include <iostream>
 #include <string>
 
@@ -31,6 +32,7 @@ void MainWindow::initWidgets() {
     QDir currentDir = QDir::currentPath();
     Tab* newTab = new Tab(currentDir.absolutePath() + "/Untitled", this);
     connect(newTab, SIGNAL(textChanged()), this, SLOT(onTextChanged()));
+    newTab->setFont(QFont("Arial",12));
     openTabs.push_back(newTab);
     m_tab = new QTabWidget(this);
     m_tab->setTabsClosable(true);
@@ -80,17 +82,23 @@ void MainWindow::initMenus() {
     m_helpMenu->setTitle(QString("&Help"));
     menuBar()->addMenu(m_helpMenu);
 
+    m_stylingMenu = new QMenu(this);
+    m_stylingMenu->setTitle(QString("&Styling"));
+    menuBar()->addMenu(m_stylingMenu);
+
     m_boldFontAction = new QAction(this);
     m_boldFontAction->setIcon(QIcon(":/images/bold.png"));
+    m_boldFontAction->setText(QString("Bold"));
     m_boldFontAction->setShortcut(QKeySequence(tr("Ctrl+b")));
-    menuBar()->addAction(m_boldFontAction);
+    m_stylingMenu->addAction(m_boldFontAction);
     connect(m_boldFontAction, &QAction::triggered,
             this, &MainWindow::changeFontToBold);
 
     m_italicFontAction= new QAction(this);
     m_italicFontAction->setIcon(QIcon(":/images/italic.png"));
+    m_italicFontAction->setText(QString("Italic"));
     m_italicFontAction->setShortcut(QKeySequence(tr("Ctrl+i")));
-    menuBar()->addAction(m_italicFontAction);
+    m_stylingMenu->addAction(m_italicFontAction);
     connect(m_italicFontAction, &QAction::triggered,
             this, &MainWindow::changeFontToItalic);
 
@@ -122,6 +130,63 @@ void MainWindow::initMenus() {
     m_colourMenu->addAction(m_blackFontAction);
     connect(m_blackFontAction, &QAction::triggered, this, &MainWindow::changeFontToBlack);
 
+    m_fontMenu = new QMenu(this);
+    m_fontMenu->setTitle(QString("&Font"));
+    menuBar()->addMenu(m_fontMenu);
+
+    m_arialFontAction = new QAction(this);
+    m_arialFontAction->setText("&Arial");
+    m_fontMenu->addAction(m_arialFontAction);
+    connect(m_arialFontAction, &QAction::triggered, this, &MainWindow::changeFontToArial);
+
+    m_timesFontAction = new QAction(this);
+    m_timesFontAction->setText("&Times New Roman");
+    m_fontMenu->addAction(m_timesFontAction);
+    connect(m_timesFontAction, &QAction::triggered, this, &MainWindow::changeFontToTimes);
+
+    m_calibriFontAction = new QAction(this);
+    m_calibriFontAction->setText("&Calibri");
+    m_fontMenu->addAction(m_calibriFontAction);
+    connect(m_calibriFontAction, &QAction::triggered, this, &MainWindow::changeFontToCalibri);
+
+    m_sizeMenu = new QMenu(this);
+    m_sizeMenu->setTitle(QString("&Size"));
+    menuBar()->addMenu(m_sizeMenu);
+
+    m_8FontAction = new QAction(this);
+    m_8FontAction->setText("&8");
+    m_sizeMenu->addAction(m_8FontAction);
+    connect(m_8FontAction, &QAction::triggered, this, &MainWindow::changeFontSize8);
+
+    m_10FontAction = new QAction(this);
+    m_10FontAction->setText("&10");
+    m_sizeMenu->addAction(m_10FontAction);
+    connect(m_10FontAction, &QAction::triggered, this, &MainWindow::changeFontSize10);
+
+    m_12FontAction = new QAction(this);
+    m_12FontAction->setText("&12");
+    m_sizeMenu->addAction(m_12FontAction);
+    connect(m_12FontAction, &QAction::triggered, this, &MainWindow::changeFontSize12);
+
+    m_14FontAction = new QAction(this);
+    m_14FontAction->setText("&14");
+    m_sizeMenu->addAction(m_14FontAction);
+    connect(m_14FontAction, &QAction::triggered, this, &MainWindow::changeFontSize14);
+
+    m_16FontAction = new QAction(this);
+    m_16FontAction->setText("&16");
+    m_sizeMenu->addAction(m_16FontAction);
+    connect(m_16FontAction, &QAction::triggered, this, &MainWindow::changeFontSize16);
+
+    m_18FontAction = new QAction(this);
+    m_18FontAction->setText("&18");
+    m_sizeMenu->addAction(m_18FontAction);
+    connect(m_18FontAction, &QAction::triggered, this, &MainWindow::changeFontSize18);
+
+    m_20FontAction = new QAction(this);
+    m_20FontAction->setText("&20");
+    m_sizeMenu->addAction(m_20FontAction);
+    connect(m_20FontAction, &QAction::triggered, this, &MainWindow::changeFontSize20);
 
 }
 
@@ -254,6 +319,91 @@ void MainWindow::changeFontToGreen() {
 
 void MainWindow::changeFontToBlack() {
         openTabs.at(m_tab->currentIndex())->setTextColor(QColor(0,0,0));
+}
+
+void MainWindow::changeFontToArial() {
+    QFont font("Arial");
+    Tab* currentTab = openTabs.at(m_tab->currentIndex());
+    if (currentTab->fontWeight() > 50) {
+        font.setWeight(QFont::Bold);
+    }
+    font.setItalic(currentTab->fontItalic());
+    font.setPixelSize(currentTab->fontSize);
+
+    currentTab->setCurrentFont(font);
+}
+
+void MainWindow::changeFontToTimes() {
+    QFont font("Times [Adobe]");
+    Tab* currentTab = openTabs.at(m_tab->currentIndex());
+    if (currentTab->fontWeight() > 50) {
+        font.setWeight(QFont::Bold);
+    }
+    font.setItalic(currentTab->fontItalic());
+    font.setPixelSize(currentTab->fontSize);
+
+    currentTab->setCurrentFont(font);
+}
+
+void MainWindow::changeFontToCalibri() {
+    QFont font("Calibri");
+    Tab* currentTab = openTabs.at(m_tab->currentIndex());
+    if (currentTab->fontWeight() > 50) {
+        font.setWeight(QFont::Bold);
+    }
+    font.setItalic(currentTab->fontItalic());
+    font.setPixelSize(currentTab->fontSize);
+
+    currentTab->setCurrentFont(font);
+}
+
+void MainWindow::changeFontSize8() {
+     Tab* currentTab = openTabs.at(m_tab->currentIndex());
+     QFont font(currentTab->font());
+     font.setPixelSize(12);
+     currentTab->setCurrentFont(font);
+}
+
+void MainWindow::changeFontSize10() {
+    Tab* currentTab = openTabs.at(m_tab->currentIndex());
+    QFont font(currentTab->font());
+    font.setPixelSize(14);
+    currentTab->setCurrentFont(font);
+}
+
+void MainWindow::changeFontSize12() {
+    Tab* currentTab = openTabs.at(m_tab->currentIndex());
+    QFont font(currentTab->font());
+    font.setPixelSize(16);
+    currentTab->setCurrentFont(font);
+}
+
+void MainWindow::changeFontSize14() {
+    Tab* currentTab = openTabs.at(m_tab->currentIndex());
+    QFont font(currentTab->font());
+    font.setPixelSize(18);
+    currentTab->setCurrentFont(font);
+}
+
+void MainWindow::changeFontSize16() {
+    Tab* currentTab = openTabs.at(m_tab->currentIndex());
+    QFont font(currentTab->font());
+    font.setPixelSize(20);
+    currentTab->setCurrentFont(font);
+}
+
+void MainWindow::changeFontSize18() {
+    Tab* currentTab = openTabs.at(m_tab->currentIndex());
+    QFont font(currentTab->font());
+    font.setPixelSize(22);
+    currentTab->setCurrentFont(font);
+}
+
+void MainWindow::changeFontSize20() {
+    Tab* currentTab = openTabs.at(m_tab->currentIndex());
+    QFont font(currentTab->font());
+    font.setPixelSize(24);
+    currentTab->setCurrentFont(font);
 }
 
 void MainWindow::onTextChanged() {
