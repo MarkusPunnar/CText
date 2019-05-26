@@ -161,7 +161,10 @@ void MainWindow::saveFileToDisk() {
         }
     }
     QString fileContent = currentTab->toPlainText();
-    m_writingWidget->saveFile(savePath, fileContent);
+    bool saved = m_writingWidget->saveFile(savePath, fileContent);
+    if (!saved) {
+        return;
+    }
     currentTab->savedState = fileContent;
     m_tab->setTabIcon(m_tab->currentIndex(), QIcon());
     QString newName = this->changeTitleFile();
@@ -180,7 +183,10 @@ void MainWindow::saveAsFileToDisk() {
         savePath = fileList.at(0);
     }
     QString fileContent = currentTab->toPlainText();
-    m_writingWidget->saveFile(savePath, fileContent);
+    bool saved = m_writingWidget->saveFile(savePath, fileContent);
+    if (!saved) {
+        return;
+    }
     currentTab->openFile = savePath;
     currentTab->savedState = fileContent;
     m_tab->setTabIcon(m_tab->currentIndex(), QIcon());
