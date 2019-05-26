@@ -78,10 +78,6 @@ void MainWindow::initMenus() {
     connect(m_quitAction, SIGNAL(triggered()),
             this, SLOT(close()));
 
-    m_helpMenu = new QMenu(this);
-    m_helpMenu->setTitle(QString("&Help"));
-    menuBar()->addMenu(m_helpMenu);
-
     m_stylingMenu = new QMenu(this);
     m_stylingMenu->setTitle(QString("&Styling"));
     menuBar()->addMenu(m_stylingMenu);
