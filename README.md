@@ -13,7 +13,7 @@ The editor can:
 To run the editor:
 
  - On Windows: 
-1) open Qt console (probably named if you have the newest version Qt 5.13.0 (MinGW 7.3.0 64-bit)
+1) open Qt console (probably named Qt 5.13.0 (MinGW 7.3.0 64-bit) if you have the newest version)
 2) go to the program folder like you would with cmd
 3) run command - qmake.exe CText.pro -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug"
 4) run command - mingw32-make.exe -j4
