@@ -13,4 +13,4 @@ The editor can:
 To run the editor:
 
  - On Windows, run bin/CText.exe
- - On Linux, run CText from command line as ./bin/CText
+ - On Linux, run the startup.sh script to compile the code and make an executable file. After that, run CText with ./CText
