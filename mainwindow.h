@@ -54,7 +54,6 @@ class MainWindow : public QMainWindow {
             QAction *m_saveAction;
             QAction *m_saveAsAction;
             QAction *m_quitAction;
-        QMenu *m_helpMenu;
         QMenu *m_stylingMenu;
             QAction *m_boldFontAction;
             QAction *m_italicFontAction;
