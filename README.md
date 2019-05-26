@@ -12,5 +12,11 @@ The editor can:
  
 To run the editor:
 
- - On Windows, run bin/CText.exe
+ - On Windows: 
+              1) open Qt console (probably named if you have the newest version Qt 5.13.0 (MinGW 7.3.0 64-bit)
+              2) go to the program folder like you would with cmd
+              3) run command - qmake.exe CText.pro -spec win32-g++ "CONFIG+=debug" "CONFIG+=qml_debug"
+              4) run command - mingw32-make.exe -j4
+              5) go to debug folder and run command (don't forget the dot at the end of the command) - windeployqt.exe --quick .
+              6) run CText.exe file in the debug folder
  - On Linux, run the startup.sh script to compile the code and make an executable file. After that, run CText with ./CText
